@@ -413,7 +413,7 @@ def render_media_row(items: list[dict[str, Any]], media_type: str) -> None:
         with columns[index]:
             with st.container(border=True):
                 if poster:
-                    st.image(poster, use_column_width=True)
+                    st.image(poster, use_container_width=True)
                 else:
                     st.markdown("### 🎬")
                 st.markdown(f"**{escape(title)}**")
@@ -449,11 +449,11 @@ def show_movie_detail(movie_id: int) -> None:
     backdrop = tmdb_image_url(movie.get("backdrop_path"), "w1280")
     poster = tmdb_image_url(movie.get("poster_path"), "w500")
     if backdrop:
-        st.image(backdrop, use_column_width=True)
+        st.image(backdrop, use_container_width=True)
     left, right = st.columns([1, 3])
     with left:
         if poster:
-            st.image(poster, use_column_width=True)
+            st.image(poster, use_container_width=True)
     with right:
         st.markdown(f"## {movie.get('title') or 'Untitled'}")
         genres = " · ".join(
@@ -515,7 +515,7 @@ def show_search_results(results: list[dict[str, Any]]) -> None:
                 poster_col, info_col = st.columns([1, 2.4])
                 with poster_col:
                     if image:
-                        st.image(image, use_column_width=True)
+                        st.image(image, use_container_width=True)
                     else:
                         st.markdown("### 🎬")
                 with info_col:
@@ -560,7 +560,7 @@ def show_detail(show_id: int) -> None:
     image = (show.get("image") or {}).get("original") or (show.get("image") or {}).get("medium")
     with poster:
         if image:
-            st.image(image, use_column_width=True)
+            st.image(image, use_container_width=True)
     with overview:
         st.markdown(f"## {show.get('name', 'Untitled')}")
         genres = " · ".join(show.get("genres") or []) or "Genres not listed"
@@ -641,7 +641,7 @@ def show_detail(show_id: int) -> None:
             with cast_columns[index % 4]:
                 portrait = (person.get("image") or {}).get("medium")
                 if portrait:
-                    st.image(portrait, use_column_width=True)
+                    st.image(portrait, use_container_width=True)
                 st.markdown(f"**{person.get('name', 'Unknown performer')}**")
                 st.caption(f"as {character.get('name', 'Unknown character')}")
 
@@ -656,7 +656,7 @@ def render_series_fallback(shows: list[dict[str, Any]]) -> None:
             with st.container(border=True):
                 image = (show.get("image") or {}).get("medium")
                 if image:
-                    st.image(image, use_column_width=True)
+                    st.image(image, use_container_width=True)
                 st.markdown(f"**{show.get('name', 'Untitled')}**")
                 genres = " · ".join(show.get("genres") or [])
                 st.caption(
@@ -864,7 +864,7 @@ def page_schedule() -> None:
             with columns[0]:
                 image = (show.get("image") or {}).get("medium")
                 if image:
-                    st.image(image, use_column_width=True)
+                    st.image(image, use_container_width=True)
             with columns[1]:
                 title = show.get("name") or "Unknown show"
                 episode_name = episode.get("name") or "Untitled episode"
@@ -914,7 +914,7 @@ def page_people() -> None:
                 image = (person.get("image") or {}).get("medium")
                 with columns[0]:
                     if image:
-                        st.image(image, use_column_width=True)
+                        st.image(image, use_container_width=True)
                 with columns[1]:
                     st.markdown(f"### {person.get('name', 'Unknown performer')}")
                     country_info = person.get("country") or {}
