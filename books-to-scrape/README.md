@@ -1,64 +1,94 @@
-# APAI Scraper
+# Books to Scrape — catalogue scraper and storefront
 
-A staged scraper for the [Books to Scrape](https://books.toscrape.com/) demo site. It can write JSON locally, store books and price changes in Supabase, and show the data in a small Streamlit dashboard.
+## Purpose
+
+This project collects book listings from the Books to Scrape practice website.
+It can save a local JSON snapshot, store catalogue records and price changes
+in Supabase, and show saved data in an interactive Streamlit storefront.
+
+## Data collection
+
+The scraper requests catalogue listing pages from
+[books.toscrape.com](https://books.toscrape.com/). It records a book's title,
+price, currency, availability, rating, source URL, and image URL. It follows
+the catalogue's pagination and does not request individual detail pages. This
+is a practice site with sample catalogue data, not a live retail source.
+
+## Data persistence
+
+The CLI can write a JSON snapshot to a local file such as `books.json`.
+Optionally, Supabase stores the current book records, scrape-run metadata, and
+price history. Repeated scrapes update each book, and a price-history record is
+added when its price differs from the last recorded price. The Streamlit
+storefront reads these Supabase tables. Local JSON supports simple exports;
+Supabase enables the app to share and query saved catalogue and history data.
+
+## User interaction
+
+Run the scraper from a terminal with `--limit` to cap the number of books,
+`--pages` to cap the pages visited, and `--output books.json` to save a JSON
+snapshot. Add `--save-to-supabase` to persist a scrape in the configured
+database. In the Streamlit app, use the sidebar to scrape and save, search and
+sort the catalogue, navigate its pages, and view a selected book's price
+history.
 
 ## Setup
 
+From this directory, create and activate a virtual environment and install
+dependencies:
+
 ```bash
 python3 -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
 python -m pip install -r requirements.txt
 ```
 
-For Supabase features, create a project and run [`schema.sql`](schema.sql) in the Supabase SQL Editor. It creates the tables and grants the server-side `service_role` the permissions the scraper needs; rerun it to apply schema updates. Copy `.env.example` to `.env` and set your project URL and **server-side secret/service-role key** (not the publishable key). Do not commit `.env` or expose this key in a browser. The app loads `.env` automatically.
-
-## Step 1: run the isolated scraper
-
-Run a small test crawl (no Supabase account required):
+For a local JSON scrape, no database configuration is needed:
 
 ```bash
 python scraper.py --limit 5 --output books.json
 ```
 
-Expand gradually by limiting the number of pages:
+To use Supabase, create a project and run [`schema.sql`](./schema.sql) in its
+SQL Editor. Create a `.env` file in this directory:
 
-```bash
-python scraper.py --pages 2 --output books.json
-python scraper.py --pages 5 --output books.json
-python scraper.py --output books.json
+```dotenv
+SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
+SUPABASE_KEY=YOUR_SERVICE_ROLE_KEY
 ```
 
-By default, the scraper pauses briefly between pages. `--limit` caps the total books; `--pages` caps pages. The script follows the site's pagination and records title, price, currency, availability, rating, and source/image URLs.
-
-## Steps 3–4: save to Supabase
-
-After setting `SUPABASE_URL` and `SUPABASE_KEY` in `.env`, try a small database run first:
-
-```bash
-python scraper.py --limit 5 --save-to-supabase
-```
-
-Then expand:
+Replace the placeholders with your project URL and server-side service-role
+key. Keep the key secret: do not use it in a browser, commit `.env`, or share
+the value. The `.gitignore` excludes `.env` and `books.json`. Start the
+Streamlit app with Supabase configured:
 
 ```bash
-python scraper.py --pages 2 --save-to-supabase
-python scraper.py --save-to-supabase
+streamlit run app.py
 ```
 
-The schema separates the current book record, scrape-run metadata, and price changes. Repeated runs update each book and add a price-history row only when its price differs from the last recorded price.
+Run the tests from this directory with `python -m unittest discover -s tests
+-v`. The Python dependencies are listed in [`requirements.txt`](./requirements.txt).
 
-## Step 5: dashboard
+## Learning
 
-With Supabase configured, run:
+The project practices HTML parsing, pagination, request timeouts, command-line
+options, database upserts, and interactive data presentation. A key design
+challenge is retaining price history without adding duplicate observations:
+each scrape compares a book's price with its most recent saved price before
+inserting a history row. The schema and scraper also distinguish current book
+state from scrape-run metadata and historical changes.
 
-```bash
-.venv/bin/streamlit run app.py
-```
+## Limitations and assistance
 
-The dashboard lists stored books, charts recorded price changes, and can launch a scrape. Leave it on a small page limit while testing, then increase it as desired.
+The scraper only reads listing pages and depends on the practice site's
+availability and HTML structure. The sample catalogue is not current retail
+data. Supabase features require an internet connection, configured tables, and
+a service-role key. Scrapes should remain small and respectful.
 
-## Notes
-
-- Books to Scrape is a purpose-built practice site; its displayed prices/ratings are sample data.
-- This project only visits the catalogue listing pages and does not fetch each book's detail page.
-- If you have not created a Supabase project yet, create one at [supabase.com](https://supabase.com/), run the schema SQL, and add the URL and secret key to your local `.env`.
+The project uses the third-party Python packages listed in
+[`requirements.txt`](./requirements.txt), plus the Supabase service and the
+Books to Scrape website. No externally copied source-code snippets are
+identified in this project; dependencies and services are used through their
+documented interfaces. The repository's MIT license covers original project
+code only; see [the third-party notices](../THIRD_PARTY_NOTICES.md) for
+content exclusions.

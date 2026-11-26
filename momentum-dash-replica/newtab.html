@@ -6,16 +6,75 @@
   <link rel="stylesheet" href="newtab.css" />
 </head>
 <body>
-  <main>
-    <h1 id="clock"></h1>
+  <main class="dashboard">
+    <header class="hero">
+      <h1 id="clock"></h1>
+      <p class="eyebrow">A little more focus, every day</p>
+    </header>
     <blockquote id="quote">
       <p id="quote-text"></p>
       <footer id="quote-author"></footer>
     </blockquote>
-    <section id="news">
-  <h2>Market highlights</h2>
-  <div id="news-list">Loading…</div>
-</section>
+
+    <p id="widget-status" role="status" aria-live="polite"></p>
+    <div class="widget-grid">
+      <section class="widget" aria-labelledby="reminders-heading">
+        <div class="widget-heading">
+          <h2 id="reminders-heading">Reminders</h2>
+          <span id="reminder-count" class="count">0</span>
+        </div>
+        <form id="reminder-form" class="widget-form">
+          <label>
+            <span>What should you remember?</span>
+            <input id="reminder-text" type="text" maxlength="120" required
+              placeholder="e.g. Call the dentist" />
+          </label>
+          <label>
+            <span>When</span>
+            <input id="reminder-when" type="datetime-local" required />
+          </label>
+          <button type="submit">Add reminder</button>
+        </form>
+        <ul id="reminder-list" class="item-list"></ul>
+        <p class="widget-hint">Due reminders are highlighted when you open a new tab.</p>
+      </section>
+
+      <section class="widget" aria-labelledby="todos-heading">
+        <div class="widget-heading">
+          <h2 id="todos-heading">To-do list</h2>
+          <span id="todo-count" class="count">0</span>
+        </div>
+        <form id="todo-form" class="widget-form inline-form">
+          <label class="sr-only" for="todo-text">New task</label>
+          <input id="todo-text" type="text" maxlength="120" required
+            placeholder="Add a task…" />
+          <button type="submit">Add</button>
+        </form>
+        <ul id="todo-list" class="item-list"></ul>
+      </section>
+
+      <section class="widget goal-widget" aria-labelledby="goal-heading">
+        <div class="widget-heading">
+          <h2 id="goal-heading">Personal goal</h2>
+        </div>
+        <form id="goal-form" class="widget-form">
+          <label>
+            <span>Your current goal</span>
+            <input id="goal-title" type="text" maxlength="120"
+              placeholder="e.g. Read more books" />
+          </label>
+          <label class="progress-label" for="goal-progress">
+            Progress <output id="goal-progress-label" for="goal-progress">0%</output>
+          </label>
+          <input id="goal-progress" type="range" min="0" max="100" step="1" value="0" />
+          <progress id="goal-progress-bar" max="100" value="0">0%</progress>
+          <div class="goal-actions">
+            <button type="submit">Save goal</button>
+            <button id="goal-reset" class="secondary-button" type="button">Clear</button>
+          </div>
+        </form>
+      </section>
+    </div>
   </main>
 
   <button id="settings-btn" title="Change background">⚙</button>

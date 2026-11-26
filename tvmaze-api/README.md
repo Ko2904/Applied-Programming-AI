@@ -1,80 +1,87 @@
-# ScreenScope — TVMaze API Explorer
+# ScreenScope — TV and film explorer
 
-An interactive, dark-themed Streamlit app for discovering trending series and
-films, then exploring show episodes, cast, schedules, and performer credits.
-Series details use the public [TVMaze REST API](https://www.tvmaze.com/api);
-trending picks and film details use the [TMDB API](https://developer.themoviedb.org/).
+## Purpose
 
-## Run it locally
+ScreenScope is an interactive Streamlit app for exploring TV series, films,
+episodes, casts, schedules, and performer credits. It combines TVMaze series
+and people information with TMDB trending picks and film details.
+
+## Data collection
+
+The app makes requests to the public [TVMaze REST API](https://www.tvmaze.com/api)
+for series search and details, episodes, casts, schedules, people, and
+performer credits. It requests trending series, trending films, movie search,
+and film details from the [TMDB API](https://developer.themoviedb.com/). TVMaze
+features do not require a key. TMDB features require a TMDB Read Access Token.
+
+## Data persistence
+
+The app does not maintain a database or persist a user profile. Streamlit
+caches API responses temporarily (30 minutes or one hour, depending on the
+request) to reduce repeated network calls. The cache is temporary application
+state, not a permanent local data store.
+
+## User interaction
+
+Use the sidebar to navigate between **Discover**, **Daily schedule**, and
+**People & credits**. Search and select series or films, explore series
+episodes and cast, choose schedule date and country, or search for performers
+and inspect their credits. If no TMDB token is configured, TVMaze series
+features remain available and the app explains that film and trending
+features are unavailable.
+
+## Setup
+
+From this directory, create and activate a virtual environment, install
+dependencies, and run the app:
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 streamlit run app.py
 ```
 
-TVMaze features need no API key. An internet connection is required. TMDB
-trending and movie search need a TMDB Read Access Token.
+An internet connection is required. To enable TMDB features, create
+`.streamlit/secrets.toml`:
 
-To enable film and trending banners locally, create `.streamlit/secrets.toml`
-from the example and add your token:
-
-```bash
-cp .streamlit/secrets.toml.example .streamlit/secrets.toml
+```toml
+TMDB_READ_ACCESS_TOKEN = "YOUR_TMDB_READ_ACCESS_TOKEN"
 ```
 
-Set `TMDB_READ_ACCESS_TOKEN` in `.streamlit/secrets.toml` or as an environment
-variable. The local secrets file is ignored by Git. For a hosted Streamlit app,
-add the same value in the app's Secrets settings; never commit your token.
+Alternatively, set the `TMDB_READ_ACCESS_TOKEN` environment variable. The
+local secrets file is ignored by Git. For a hosted Streamlit deployment, enter
+the value in its Secrets settings. Never commit or publish the token.
 
-## Explore
+Run the API-client tests with `python -m unittest discover -s tests -v`. The
+Python dependencies are listed in [`requirements.txt`](./requirements.txt).
 
-- **Discover** — dark cinematic home screen with weekly TMDB trending series
-  and film hero banners, image cards, and separate series/film search.
-- **Series details** — TVMaze ratings, genre distribution, seasons, episode
-  summaries, and main cast.
-- **Film details** — TMDB rating, release date, runtime, overview, and cast.
-- **Daily schedule** — browse local TV or streaming schedules by date and
-  country; choose all countries for the global streaming schedule.
-- **People & credits** — search performers and inspect the shows they appear in.
+## Learning
 
-The request code lives in [`tvmaze_client.py`](./tvmaze_client.py) and
-[`tmdb_client.py`](./tmdb_client.py); the UI and cached data functions are in
-[`app.py`](./app.py). Responses are cached in Streamlit to keep repeated
-interactions quick and limit redundant API calls. Errors from the API are shown
-in the app rather than being hidden.
+The project practices REST API clients, request error handling, caching,
+interactive Streamlit navigation, and combining data from two services. A key
+challenge is supporting useful discovery when the optional TMDB credential is
+missing: the app keeps TVMaze-based series features available while presenting
+a clear explanation for unavailable film and trending features. The clients
+in [`tvmaze_client.py`](./tvmaze_client.py) and [`tmdb_client.py`](./tmdb_client.py)
+keep API requests separate from the UI.
 
-## Learn the API
+## Limitations and assistance
 
-The app demonstrates these public endpoints:
-
-| App feature | TVMaze endpoint |
-| --- | --- |
-| Show search | `/search/shows?q=...` |
-| People search | `/search/people?q=...` |
-| Show details | `/shows/{id}` |
-| Episode guide | `/shows/{id}/episodes` |
-| Main cast | `/shows/{id}/cast` |
-| Local schedule | `/schedule?date=...&country=...` |
-| Streaming schedule | `/schedule/web?date=...&country=...` |
-| Performer credits | `/people/{id}/castcredits?embed=show` |
-| Trending series | TMDB `/3/trending/tv/week` |
-| Trending films | TMDB `/3/trending/movie/week` |
-| Film search and details | TMDB `/3/search/movie`, `/3/movie/{id}` |
-
-TVMaze documents rate limits and caching in its
-[API documentation](https://www.tvmaze.com/api#rate-limiting). TMDB API use
-requires attribution; this app displays the required notice: “This product uses
-the TMDB API but is not endorsed or certified by TMDB.” See
-[TMDB attribution requirements](https://developer.themoviedb.org/docs/faq).
-TVMaze data is licensed under
-[CC BY-SA](https://creativecommons.org/licenses/by-sa/4.0/); keep attribution
-and the license in mind when reusing or redistributing data. Images belong to
+This is a learning project, not an official service from TVMaze or TMDB. It
+depends on external API availability, rate limits, terms, and data accuracy.
+Trending results can change; film features need a TMDB token; and cached
+results are temporary. TVMaze data is licensed under
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); retain
+appropriate attribution and consider its share-alike terms when reusing data.
+The app displays TMDB's notice: “This product uses the TMDB API but is not
+endorsed or certified by TMDB.” See [TMDB attribution
+requirements](https://developer.themoviedb.org/docs/faq). Images belong to
 their respective rights holders.
 
-## Run the tests
-
-```bash
-python -m unittest discover -s tests -v
-```
+The project uses the third-party Python packages in
+[`requirements.txt`](./requirements.txt), along with TVMaze and TMDB APIs.
+No externally copied source-code snippets are identified in this project;
+dependencies and services are used through their documented interfaces. The
+repository's MIT license covers original project code only; see
+[the third-party notices](../THIRD_PARTY_NOTICES.md) for content exclusions.
