@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "New Tab Dashboard",
   "version": "0.1.0",
-  "description": "Custom background, daily quote, and productivity widgets on every new tab.",
+  "description": "Custom background, original daily note, and productivity widgets on every new tab.",
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },

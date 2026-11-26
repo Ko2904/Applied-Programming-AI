@@ -34,6 +34,8 @@ history.
 
 ## Setup
 
+The project was tested with Python 3.11.
+
 From this directory, create and activate a virtual environment and install
 dependencies:
 

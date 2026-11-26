@@ -2,13 +2,14 @@
 
 ## Purpose
 
-This Chrome extension replaces the new-tab page with a clock, daily quote,
+This Chrome extension replaces the new-tab page with a clock, original daily note,
 reminders, a to-do list, a personal goal tracker, and customizable backgrounds.
 
 ## Data collection
 
-Daily quotes are loaded from the bundled [`quotes.json`](./quotes.json). The
-extension does not fetch news or contact an external service.
+Original daily notes created for this project are loaded from the bundled
+[`quotes.json`](./quotes.json). The extension does not fetch news or contact an
+external service.
 
 ## Data persistence
 
@@ -19,7 +20,7 @@ devices.
 
 ## User interaction
 
-After installation, opening a new tab displays the time, a quote, and three
+After installation, opening a new tab displays the time, a daily note, and three
 widgets. Add reminders with a date and time, add and complete to-do items, and
 set one personal goal with manually updated progress. Due reminders are
 highlighted when the new-tab page is open; the extension does not send system

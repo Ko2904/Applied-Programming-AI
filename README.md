@@ -10,7 +10,7 @@ interfaces. Each project has its own dependencies and setup instructions.
 | --- | --- | --- |
 | [Books to Scrape](./books-to-scrape/) | Scrapes the Books to Scrape practice catalogue, optionally saves catalogue and price history to Supabase, and displays it in a Streamlit storefront. | Python, requests, Beautiful Soup, Streamlit, Supabase |
 | [ScreenScope](./tvmaze-api/) | Searches TV series, episodes, cast, schedules, people, and film recommendations using the TVMaze and TMDB APIs. | Python, Streamlit, TVMaze API, TMDB API |
-| [New Tab Dashboard](./momentum-dash-replica/) | Replaces the Chrome new-tab page with a clock, daily quote, reminders, a to-do list, a personal goal tracker, and customizable backgrounds. | Chrome Extensions, JavaScript, HTML, CSS |
+| [New Tab Dashboard](./momentum-dash-replica/) | Replaces the Chrome new-tab page with a clock, original daily note, reminders, a to-do list, a personal goal tracker, and customizable backgrounds. | Chrome Extensions, JavaScript, HTML, CSS |
 
 ## Data collection and persistence
 
@@ -23,10 +23,10 @@ interfaces. Each project has its own dependencies and setup instructions.
   trending series, films, and film details from TMDB. Streamlit caches API
   responses temporarily; the app does not maintain its own database. Film and
   trending features require a TMDB read access token.
-- **New Tab Dashboard** uses bundled quotes and does not fetch news or contact
-  an external data service. Reminders, to-do items, goal progress, selected
-  background, and uploaded background image are stored in Chrome local storage
-  in the user's browser profile.
+- **New Tab Dashboard** uses original bundled daily notes and does not fetch
+  news or contact an external data service. Reminders, to-do items, goal
+  progress, selected background, and uploaded background image are stored in
+  Chrome local storage in the user's browser profile.
 
 The Python projects contact external services when their relevant features
 are used. Review each README for API requirements, credentials, data handling,
